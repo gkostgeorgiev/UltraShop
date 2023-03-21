@@ -1,11 +1,11 @@
 import React from "react";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Container } from "react-bootstrap";
 import Product from "../components/Product.component";
 import products from "../products";
 
 const HomeScreen = () => {
   return (
-    <>
+    <Container>
       <h1>Latest Products</h1>
       <Row>
         {products.map((product) => (
@@ -14,7 +14,7 @@ const HomeScreen = () => {
           </Col>
         ))}
       </Row>
-    </>
+    </Container>
   );
 };
 
