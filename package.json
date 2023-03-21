@@ -1,0 +1,22 @@
+{
+  "name": "ultrashop",
+  "version": "1.0.0",
+  "description": "A React Project with Mongo DB as a backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gkostgeorgiev/UltraShop.git"
+  },
+  "author": "Georgi Kostadinov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gkostgeorgiev/UltraShop/issues"
+  },
+  "homepage": "https://github.com/gkostgeorgiev/UltraShop#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
