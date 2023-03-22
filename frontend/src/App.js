@@ -1,11 +1,8 @@
 import React, { Fragment } from "react";
 import {
-  BrowserRouter as Router,
-  Outlet,
   Route,
   Routes,
 } from "react-router-dom";
-import { Container } from "react-bootstrap";
 import Header from "./components/Header.component";
 import Footer from "./components/Footer.component";
 import HomeScreen from "./screens/HomeScreen";
