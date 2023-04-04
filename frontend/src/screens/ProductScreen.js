@@ -16,6 +16,7 @@ import { listProductDetails } from "../actions/productActions";
 import Rating from "../components/Rating.component";
 import Loader from "../components/Loader.component";
 import Message from "../components/Message.component";
+import { addToCart } from "../actions/cartActions";
 
 const ProductScreen = () => {
   const [qty, setQty] = useState(1);
@@ -24,7 +25,6 @@ const ProductScreen = () => {
 
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
-  console.log(id, productDetails, loading, error, product);
 
   const dispatch = useDispatch();
 
@@ -33,6 +33,7 @@ const ProductScreen = () => {
   }, [dispatch, id]);
 
   const addToCartHandler = () => {
+    addToCart(id, qty);
     navigate(`/cart/${id}?qty=${qty}`);
   };
 
