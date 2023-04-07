@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+// import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
@@ -17,7 +17,6 @@ const Header = () => {
 
   return (
     <header>
-      {/* <Fragment> */}
       <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
         <Container>
           <LinkContainer to="/">
@@ -52,7 +51,6 @@ const Header = () => {
         </Container>
       </Navbar>
       <Outlet />
-      {/* </Fragment> */}
     </header>
   );
 };

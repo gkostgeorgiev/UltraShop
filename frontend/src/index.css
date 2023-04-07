@@ -41,3 +41,7 @@ a {
 .card {
   margin-top: 1rem;
 }
+
+.register-button, .login-button {
+  margin-top: 1rem;
+}
