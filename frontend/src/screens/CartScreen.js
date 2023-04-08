@@ -20,6 +20,8 @@ const CartScreen = () => {
   const { id } = useParams();
   const qty = new URLSearchParams(useLocation().search).get("qty");
 
+  const userLogin = useSelector(state => state.userLogin)
+  const { userInfo } = userLogin;
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
 
@@ -36,7 +38,7 @@ const CartScreen = () => {
   };
 
   const checkoutHandler = () => {
-    navigate('/login?redirect=shipping');
+    userInfo ? navigate('/shipping') : navigate('/login');
   }
 
   return (
