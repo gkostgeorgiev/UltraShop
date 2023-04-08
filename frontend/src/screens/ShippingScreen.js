@@ -7,15 +7,17 @@ import CheckoutSteps from "../components/CheckoutSteps.component";
 import { saveShippingAddress } from "../actions/cartActions";
 
 const ShippingScreen = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  
   const cart = useSelector((state) => state.cart);
   const { shippingAddress } = cart;
+
   const [address, setAddress] = useState(shippingAddress.address);
   const [city, setCity] = useState(shippingAddress.city);
   const [postalCode, setPostalCode] = useState(shippingAddress.postalCode);
   const [country, setCountry] = useState(shippingAddress.country);
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const submitHandler = (e) => {
     e.preventDefault();
