@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Container,
@@ -12,6 +12,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message.component";
 import CheckoutSteps from "../components/CheckoutSteps.component";
+import { createOrder } from "../actions/orderActions";
 
 const PaceOrderScreen = () => {
   const dispatch = useDispatch();
@@ -21,20 +22,42 @@ const PaceOrderScreen = () => {
 
   const addDecimals = (num) => {
     return (Math.round(num * 100) / 100).toFixed(2);
-  }
+  };
 
   //   Calculate prices
-  cart.itemsPrice = addDecimals(cart.cartItems.reduce(
-    (acc, currItem) => acc + currItem.price * currItem.qty,
-    0
-  ));
-
+  cart.itemsPrice = addDecimals(
+    cart.cartItems.reduce(
+      (acc, currItem) => acc + currItem.price * currItem.qty,
+      0
+    )
+  );
   cart.shippingPrice = addDecimals(cart.itemsPrice > 100 ? 0 : 10);
-  cart.totalPrice = (Number(cart.itemsPrice) + Number(cart.shippingPrice)).toFixed(2);
+  cart.totalPrice = (
+    Number(cart.itemsPrice) + Number(cart.shippingPrice)
+  ).toFixed(2);
 
   const placeOrderHandler = () => {
-    console.log("place order");
+    dispatch(
+      createOrder({
+        orderItems: cart.cartItems,
+        shippingAddress: cart.shippingAddress,
+        paymentMethod: cart.paymentMethod,
+        itemsPrice: cart.itemsPrice,
+        shippingPrice: cart.shippingPrice,
+        totalPrice: cart.totalPrice,
+      })
+    );
   };
+
+  const orderCreate = useSelector((state) => state.orderCreate);
+  const { order, success, error } = orderCreate;
+  console.log(order, success, error)
+
+  useEffect(() => {
+    if (success) {
+      navigate(`/order/${order._id}`);
+    }
+  }, [navigate, order._id, success]);
 
   return (
     <Container>
@@ -80,7 +103,8 @@ const PaceOrderScreen = () => {
                           </Link>
                         </Col>
                         <Col md={4}>
-                          {item.qty} * {item.price} = €{addDecimals(item.qty * item.price)}
+                          {item.qty} * {item.price} = €
+                          {addDecimals(item.qty * item.price)}
                         </Col>
                       </Row>
                     </ListGroup.Item>
@@ -116,6 +140,10 @@ const PaceOrderScreen = () => {
                   <Col>Total:</Col>
                   <Col>€{cart.totalPrice}</Col>
                 </Row>
+              </ListGroup.Item>
+
+              <ListGroup.Item>
+                {/* {error && <Message variant="danger">{error}</Message>} */}
               </ListGroup.Item>
 
               <ListGroup.Item>
