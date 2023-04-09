@@ -55,9 +55,10 @@ const PaceOrderScreen = () => {
 
   useEffect(() => {
     if (success) {
-      navigate(`/order/${order._id}`);
+      const orderId = order._id;
+      navigate(`/order/${orderId}`);
     }
-  }, [navigate, order._id, success]);
+  }, [navigate, order, success]);
 
   return (
     <Container>
