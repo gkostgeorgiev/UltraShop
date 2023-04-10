@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import { Link, useParams } from "react-router-dom";
 import { Container, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message.component";
 import Loader from "../components/Loader.component";
-import { getOrderDetails } from "../actions/orderActions";
+import { getOrderDetails, payOrder } from "../actions/orderActions";
+import { ORDER_PAY_RESET } from "../constants/orderConstants";
 
 const OrderScreen = () => {
   const [sdkReady, setSdkReady] = useState(false);
+  // const [{ isLoaded, isPending }] = usePayPalScriptReducer();
 
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -30,21 +33,26 @@ const OrderScreen = () => {
       script.onload = () => setSdkReady(true);
       document.body.appendChild(script);
     };
-    
-    if (!order || successPay){
+
+    if (!order || successPay) {
+      dispatch({ type: ORDER_PAY_RESET });
       dispatch(getOrderDetails(orderId));
     } else if (!order.isPaid) {
       if (!window.paypal) {
-        addPayPalScript()
+        addPayPalScript();
       } else {
         setSdkReady(true);
       }
     }
-
   }, [dispatch, orderId, successPay, order]);
 
   const addDecimals = (num) => {
     return (Math.round(num * 100) / 100).toFixed(2);
+  };
+
+  const successPaymentHandler = (paymentResult) => {
+    console.log(paymentResult);
+    dispatch(payOrder(orderId, paymentResult));
   };
 
   return loading ? (
@@ -155,6 +163,35 @@ const OrderScreen = () => {
                   <Col>€{order.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
+
+              {!order.isPaid && (
+                <ListGroup.Item>
+                  {loadingPay && <Loader />}
+                  {!sdkReady ? (
+                    <Loader />
+                  ) : (
+                    <PayPalButtons
+                      createOrder={(data, actions) => {
+                        return actions.order.create({
+                          purchase_units: [
+                            {
+                              amount: {
+                                value: order.totalPrice,
+                                currency_code: "EUR",
+                              },
+                            },
+                          ],
+                        });
+                      }}
+                      onApprove={(data, actions) => {
+                        return actions.order.capture().then((details) => {
+                          successPaymentHandler(details, data);
+                        });
+                      }}
+                    />
+                  )}
+                </ListGroup.Item>
+              )}
             </ListGroup>
           </Card>
         </Col>
