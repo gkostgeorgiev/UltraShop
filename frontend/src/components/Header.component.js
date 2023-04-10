@@ -1,18 +1,20 @@
-// import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { logout } from "../actions/userActions";
+import { resetShippingAddres } from "../actions/cartActions";
 
 const Header = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const logoutHandler = () => {
     dispatch(logout());
-    console.log('user logged out');
+    dispatch(resetShippingAddres());
+    navigate('/');
   }
 
   return (

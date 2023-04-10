@@ -20,11 +20,11 @@ const CartScreen = () => {
   const { id } = useParams();
   const qty = new URLSearchParams(useLocation().search).get("qty");
 
-  const userLogin = useSelector(state => state.userLogin)
+  const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
-  
+
   useEffect(() => {
     if (id) {
       dispatch(addToCart(id, Number(qty)));
@@ -36,8 +36,8 @@ const CartScreen = () => {
   };
 
   const checkoutHandler = () => {
-    userInfo ? navigate('/shipping') : navigate('/login');
-  }
+    userInfo ? navigate("/shipping") : navigate("/login");
+  };
 
   return (
     <Container>
@@ -45,8 +45,8 @@ const CartScreen = () => {
         <Col md={8}>
           <h1>Shopping Cart</h1>
           {cartItems.length === 0 ? (
-            <Message>
-              Your cart is empty <Link to="/"> Go Back</Link>{" "}
+            <Message variant='warning'> 
+              Your cart is empty <Link to="/">Go Back</Link>
             </Message>
           ) : (
             <ListGroup variant="flush">
@@ -103,10 +103,23 @@ const CartScreen = () => {
                   {cartItems.reduce((acc, currItem) => acc + currItem.qty, 0)})
                   items
                 </h2>
-                €{cartItems.reduce((acc, currItem) => acc + currItem.qty * currItem.price, 0).toFixed(2)}
+                €
+                {cartItems
+                  .reduce(
+                    (acc, currItem) => acc + currItem.qty * currItem.price,
+                    0
+                  )
+                  .toFixed(2)}
               </ListGroup.Item>
               <ListGroup.Item>
-                <Button type='button' className="btn-block" disabled={cartItems.length === 0} onClick={checkoutHandler}>Proceed to checkout</Button>
+                <Button
+                  type="button"
+                  className="btn-block"
+                  disabled={cartItems.length === 0}
+                  onClick={checkoutHandler}
+                >
+                  Proceed to checkout
+                </Button>
               </ListGroup.Item>
             </ListGroup>
           </Card>
