@@ -8,6 +8,7 @@ import Message from "../components/Message.component";
 import Loader from "../components/Loader.component";
 import { getOrderDetails, payOrder } from "../actions/orderActions";
 import { ORDER_PAY_RESET } from "../constants/orderConstants";
+import { resetCartItems } from "../actions/cartActions";
 
 const OrderScreen = () => {
   const [sdkReady, setSdkReady] = useState(false);
@@ -52,6 +53,7 @@ const OrderScreen = () => {
   const successPaymentHandler = (paymentResult) => {
     console.log(paymentResult);
     dispatch(payOrder(orderId, paymentResult));
+    dispatch(resetCartItems());
   };
 
   return loading ? (
