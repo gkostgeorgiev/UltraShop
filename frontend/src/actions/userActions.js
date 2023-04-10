@@ -15,6 +15,7 @@ import {
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_SUCCESS,
 } from "../constants/userConstants";
+import { ORDER_MY_LIST_RESET } from '../constants/orderConstants';
 
 export const login = (email, password) => async (dispatch) => {
   try {
@@ -63,6 +64,7 @@ export const logout = () => (dispatch) => {
   // Dispatch USER_LOGOUT action to reset the user state
   dispatch({ type: USER_LOGOUT });
   dispatch({ type: USER_DETAILS_RESET});
+  dispatch({ type: ORDER_MY_LIST_RESET});
 };
 
 export const register = (name, email, password) => async (dispatch) => {

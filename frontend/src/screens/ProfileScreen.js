@@ -42,13 +42,13 @@ const ProfileScreen = () => {
       if (!user || !user.name || success) {
         dispatch({ type: USER_UPDATE_PROFILE_RESET });
         dispatch(getUserDetails("profile"));
-        dispatch(listMyOrders());
       } else {
+        dispatch(listMyOrders());
         setName(user.name);
         setEmail(user.email);
       }
     }
-  }, [dispatch, navigate, userInfo, user, success]);
+  }, [dispatch, navigate, userInfo, user, success, ]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -61,13 +61,7 @@ const ProfileScreen = () => {
       return;
     }
 
-    // DISPATCH UPDATE PROFILE
     dispatch(updateUserProfile({ id: user._id, name, email, password }));
-    // setSuccess("Profile successfully updated");
-    // setTimeout(() => {
-    //     setSuccess(null);
-    //     navigate('/')
-    // }, 10000);
   };
 
   return (
