@@ -48,7 +48,9 @@ const OrderScreen = () => {
               <p>
                 {" "}
                 {order.isDelivered ? (
-                  <Message variant="success">Delivered on: {order.deliveredAt}</Message>
+                  <Message variant="success">
+                    Delivered on: {order.deliveredAt}
+                  </Message>
                 ) : (
                   <Message variant="danger">Not Delivered</Message>
                 )}
