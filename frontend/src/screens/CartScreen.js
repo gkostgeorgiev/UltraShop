@@ -13,6 +13,7 @@ import {
 import Message from "../components/Message.component";
 import { addToCart, removeFromCart } from "../actions/cartActions";
 import { Container } from "react-bootstrap";
+import { orderDetailsReset, resetCreateOrder } from "../actions/orderActions";
 
 const CartScreen = () => {
   const dispatch = useDispatch();
@@ -39,6 +40,11 @@ const CartScreen = () => {
     userInfo ? navigate("/shipping") : navigate("/login");
   };
 
+  const resetOrders = () => {
+    dispatch(orderDetailsReset());
+    dispatch(resetCreateOrder());
+  }
+
   return (
     <Container>
       <Row>
@@ -46,7 +52,7 @@ const CartScreen = () => {
           <h1>Shopping Cart</h1>
           {cartItems.length === 0 ? (
             <Message variant='warning'> 
-              Your cart is empty <Link to="/">Go Back</Link>
+              Your cart is empty <Link to="/" onClick={resetOrders}>Go Back</Link>
             </Message>
           ) : (
             <ListGroup variant="flush">

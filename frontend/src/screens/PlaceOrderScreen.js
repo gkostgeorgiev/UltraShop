@@ -51,7 +51,8 @@ const PaceOrderScreen = () => {
 
   const orderCreate = useSelector((state) => state.orderCreate);
   const { order, success, error } = orderCreate;
-  console.log(order, success, error)
+  console.log(order, success, error);
+  console.log(cart.shippingAddress === {})
 
   useEffect(() => {
     if (success) {
@@ -68,23 +69,29 @@ const PaceOrderScreen = () => {
           <ListGroup variant="flush">
             <ListGroup.Item>
               <h2>SHIPPING TO:</h2>
-              <p>
-                {" "}
-                {cart.shippingAddress.address}, {cart.shippingAddress.city},{" "}
-                {cart.shippingAddress.postalCode},{" "}
-                {cart.shippingAddress.country}
-              </p>
+                <p>
+                  {" "}
+                  {cart.shippingAddress.address}, {cart.shippingAddress.city},{" "}
+                  {cart.shippingAddress.postalCode},{" "}
+                  {cart.shippingAddress.country}
+                </p>
             </ListGroup.Item>
 
             <ListGroup.Item>
               <h2>Payment Method:</h2>
-              {cart.paymentMethod}
+              {cart.paymentMethod ? (
+                cart.paymentMethod
+              ) : (
+                <Message variant="warning">
+                  You have not selected a payment method yet.
+                </Message>
+              )}
             </ListGroup.Item>
 
             <ListGroup.Item>
               <h2>Order Items:</h2>
               {cart.cartItems.length === 0 ? (
-                <Message>Your cart is empty.</Message>
+                <Message variant='warning'>Your cart is empty.</Message>
               ) : (
                 <ListGroup variant="flush">
                   {cart.cartItems.map((item, index) => (

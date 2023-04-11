@@ -126,6 +126,8 @@ const ProfileScreen = () => {
             <Loader />
           ) : errorMyListOrders ? (
             <Message variant="danger">{errorMyListOrders}</Message>
+          ) : orders.length === 0 ? (
+            <Message>You've not placed any orders yet.</Message>
           ) : (
             <Table striped bordered hover responsive className="table-sm">
               <thead>

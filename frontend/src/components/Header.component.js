@@ -4,6 +4,7 @@ import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { Outlet, useNavigate } from "react-router-dom";
 import { logout } from "../actions/userActions";
 import { resetShippingAddres } from "../actions/cartActions";
+import { orderDetailsReset, resetCreateOrder } from "../actions/orderActions";
 
 const Header = () => {
   const userLogin = useSelector((state) => state.userLogin);
@@ -14,14 +15,23 @@ const Header = () => {
   const logoutHandler = () => {
     dispatch(logout());
     dispatch(resetShippingAddres());
+    dispatch(orderDetailsReset());
+    dispatch(resetCreateOrder());
     navigate('/');
+  }
+
+  const homeScreenHandler = () => {
+    dispatch(orderDetailsReset());
+    dispatch(resetCreateOrder());
   }
 
   return (
     <header>
       <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
         <Container>
-          <LinkContainer to="/">
+          <LinkContainer to="/" 
+          onClick={homeScreenHandler}
+          >
             <Navbar.Brand>UltraShop</Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
