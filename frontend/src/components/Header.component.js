@@ -20,18 +20,11 @@ const Header = () => {
     navigate('/');
   }
 
-  const homeScreenHandler = () => {
-    dispatch(orderDetailsReset());
-    dispatch(resetCreateOrder());
-  }
-
   return (
     <header>
       <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
         <Container>
-          <LinkContainer to="/" 
-          onClick={homeScreenHandler}
-          >
+          <LinkContainer to="/" >
             <Navbar.Brand>UltraShop</Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />

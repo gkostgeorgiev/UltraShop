@@ -6,7 +6,7 @@ import { Container, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message.component";
 import Loader from "../components/Loader.component";
-import { getOrderDetails, payOrder } from "../actions/orderActions";
+import { getOrderDetails, orderDetailsReset, payOrder, resetCreateOrder } from "../actions/orderActions";
 import { ORDER_PAY_RESET } from "../constants/orderConstants";
 import { resetCartItems } from "../actions/cartActions";
 
@@ -45,6 +45,14 @@ const OrderScreen = () => {
       }
     }
   }, [dispatch, orderId, successPay, order]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(orderDetailsReset());
+      dispatch(resetCreateOrder());
+    };
+    // eslint-disable-next-line
+  }, []);
 
   const addDecimals = (num) => {
     return (Math.round(num * 100) / 100).toFixed(2);

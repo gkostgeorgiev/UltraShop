@@ -14,7 +14,7 @@ import Message from "../components/Message.component";
 import CheckoutSteps from "../components/CheckoutSteps.component";
 import { createOrder } from "../actions/orderActions";
 
-const PaceOrderScreen = () => {
+const PlaceOrderScreen = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -52,7 +52,6 @@ const PaceOrderScreen = () => {
   const orderCreate = useSelector((state) => state.orderCreate);
   const { order, success, error } = orderCreate;
   console.log(order, success, error);
-  console.log(cart.shippingAddress === {})
 
   useEffect(() => {
     if (success) {
@@ -69,12 +68,12 @@ const PaceOrderScreen = () => {
           <ListGroup variant="flush">
             <ListGroup.Item>
               <h2>SHIPPING TO:</h2>
-                <p>
-                  {" "}
-                  {cart.shippingAddress.address}, {cart.shippingAddress.city},{" "}
-                  {cart.shippingAddress.postalCode},{" "}
-                  {cart.shippingAddress.country}
-                </p>
+              <p>
+                {" "}
+                {cart.shippingAddress.address}, {cart.shippingAddress.city},{" "}
+                {cart.shippingAddress.postalCode},{" "}
+                {cart.shippingAddress.country}
+              </p>
             </ListGroup.Item>
 
             <ListGroup.Item>
@@ -91,7 +90,7 @@ const PaceOrderScreen = () => {
             <ListGroup.Item>
               <h2>Order Items:</h2>
               {cart.cartItems.length === 0 ? (
-                <Message variant='warning'>Your cart is empty.</Message>
+                <Message variant="warning">Your cart is empty.</Message>
               ) : (
                 <ListGroup variant="flush">
                   {cart.cartItems.map((item, index) => (
@@ -172,4 +171,4 @@ const PaceOrderScreen = () => {
   );
 };
 
-export default PaceOrderScreen;
+export default PlaceOrderScreen;
