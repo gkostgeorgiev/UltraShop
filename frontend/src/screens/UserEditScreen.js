@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message.component";
 import Loader from "../components/Loader.component";
 import FormContainer from "../components/FormContainer.component";
-import { getUserDetails } from "../actions/userActions";
+import { getUserDetails, updateUserByAdmin } from "../actions/userActions";
+import { USER_UPDATE_BY_ADMIN_RESET } from "../constants/userConstants";
 
 const UserEditScreen = () => {
   const [name, setName] = useState("");
@@ -19,18 +20,32 @@ const UserEditScreen = () => {
   const userDetails = useSelector((state) => state.userDetails);
   const { loading, error, user } = userDetails;
 
+  const userUpdate = useSelector((state) => state.userUpdateByAdmin);
+  const {
+    loading: loadingUpdate,
+    error: errorUpdate,
+    success: successUpdate,
+  } = userUpdate;
+
   useEffect(() => {
-    if (!user.name || user._id !== id) {
-        dispatch(getUserDetails(id))
+    if (successUpdate) {
+      dispatch({ type: USER_UPDATE_BY_ADMIN_RESET });
+      navigate("/admin/userlist");
+    } else {
+      if (!user.name || user._id !== id) {
+        dispatch(getUserDetails(id));
       } else {
-        setName(user.name)
-        setEmail(user.email)
-        setIsAdmin(user.isAdmin)
+        setName(user.name);
+        setEmail(user.email);
+        setIsAdmin(user.isAdmin);
       }
-  }, [dispatch, id, user]);
+    }
+  }, [dispatch, navigate, id, user, successUpdate]);
 
   const submitHandler = (e) => {
     e.preventDefault();
+
+    dispatch(updateUserByAdmin({ _id: id, name, email, isAdmin }));
   };
 
   return (
@@ -40,8 +55,8 @@ const UserEditScreen = () => {
       </Link>
       <FormContainer>
         <h1>Edit User</h1>
-        {/* {loadingUpdate && <Loader />}
-        {errorUpdate && <Message variant='danger'>{errorUpdate}</Message>} */}
+        {loadingUpdate && <Loader />}
+        {errorUpdate && <Message variant='danger'>{errorUpdate}</Message>}
         {loading ? (
           <Loader />
         ) : error ? (
