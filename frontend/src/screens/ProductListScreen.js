@@ -5,7 +5,7 @@ import { Table, Button, Container, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message.component";
 import Loader from "../components/Loader.component";
-import { listProducts } from "../actions/productActions";
+import { listProducts, deleteProduct } from "../actions/productActions";
 
 const ProductListScreen = () => {
   const dispatch = useDispatch();
@@ -13,6 +13,9 @@ const ProductListScreen = () => {
 
   const productList = useSelector((state) => state.productList);
   const { loading, error, products } = productList;
+
+  const productDelete = useSelector((state) => state.productDelete);
+  const { loading: loadingProductDelete, error: errorProductDelete, success: successProductDelete } = productDelete;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -25,15 +28,15 @@ const ProductListScreen = () => {
     } else {
       navigate("/login");
     }
-  }, [dispatch, navigate, userInfo]);
+  }, [dispatch, navigate, userInfo, successProductDelete]);
 
   const createProductHandler = (product) => {
     // Create product
   };
 
-  const deleteProduct = (id) => {
+  const deleteProductHandler = (id) => {
     if (window.confirm("Are you sure")) {
-      //   Delete product
+      dispatch(deleteProduct(id));
     }
   };
 
@@ -49,6 +52,8 @@ const ProductListScreen = () => {
           </Button>
         </Col>
       </Row>
+      {loadingProductDelete && <Loader />}
+      {errorProductDelete && <Message vaiant='danger'>{errorProductDelete}</Message>}
       {loading ? (
         <Loader />
       ) : error ? (
@@ -82,7 +87,7 @@ const ProductListScreen = () => {
                   <Button
                     variant="danger"
                     className="btn-sm"
-                    onClick={() => deleteProduct(product._id)}
+                    onClick={() => deleteProductHandler(product._id)}
                   >
                     <i className="fas fa-trash"></i>
                   </Button>
