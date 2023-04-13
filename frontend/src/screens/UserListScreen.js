@@ -13,7 +13,6 @@ const UserListScreen = () => {
 
   const userList = useSelector((state) => state.userList);
   const { loading, error, users } = userList;
-  console.log(loading, error, users);
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -71,7 +70,7 @@ const UserListScreen = () => {
                   )}
                 </td>
                 <td>
-                  <LinkContainer to={`/user/${user._id}/edit`}>
+                  <LinkContainer to={`/admin/users/${user._id}/edit`}>
                     <Button variant="light" className="btn-sm">
                       <i className="fas fa-edit"></i>
                     </Button>
