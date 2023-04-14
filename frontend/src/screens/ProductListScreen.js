@@ -5,7 +5,12 @@ import { Table, Button, Container, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message.component";
 import Loader from "../components/Loader.component";
-import { listProducts, deleteProduct } from "../actions/productActions";
+import {
+  listProducts,
+  deleteProduct,
+  createProduct,
+} from "../actions/productActions";
+import { PRODUCT_CREATE_RESET } from "../constants/productConstants";
 
 const ProductListScreen = () => {
   const dispatch = useDispatch();
@@ -15,23 +20,46 @@ const ProductListScreen = () => {
   const { loading, error, products } = productList;
 
   const productDelete = useSelector((state) => state.productDelete);
-  const { loading: loadingProductDelete, error: errorProductDelete, success: successProductDelete } = productDelete;
+  const {
+    loading: loadingProductDelete,
+    error: errorProductDelete,
+    success: successProductDelete,
+  } = productDelete;
+
+  const productCreate = useSelector((state) => state.productCreate);
+  const {
+    loading: loadingProductCreate,
+    error: errorProductCreate,
+    success: successProductCreate,
+    product: createdProduct,
+  } = productCreate;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
   useEffect(() => {
-    if (userInfo && userInfo.isAdmin) {
-      dispatch(listProducts());
-    } else if (userInfo && userInfo.isAdmin === false) {
-      navigate("/");
-    } else {
-      navigate("/login");
-    }
-  }, [dispatch, navigate, userInfo, successProductDelete]);
+    dispatch({ type: PRODUCT_CREATE_RESET });
 
-  const createProductHandler = (product) => {
-    // Create product
+    if (!userInfo.isAdmin) {
+      navigate("/");
+    }
+
+    if (successProductCreate) {
+      navigate(`/admin/product/${createdProduct._id}/edit`);
+    } else {
+      dispatch(listProducts());
+    }
+  }, [
+    dispatch,
+    navigate,
+    userInfo,
+    successProductDelete,
+    successProductCreate,
+    createdProduct,
+  ]);
+
+  const createProductHandler = () => {
+    dispatch(createProduct());
   };
 
   const deleteProductHandler = (id) => {
@@ -53,7 +81,13 @@ const ProductListScreen = () => {
         </Col>
       </Row>
       {loadingProductDelete && <Loader />}
-      {errorProductDelete && <Message vaiant='danger'>{errorProductDelete}</Message>}
+      {errorProductDelete && (
+        <Message vaiant="danger">{errorProductDelete}</Message>
+      )}
+      {loadingProductCreate && <Loader />}
+      {errorProductCreate && (
+        <Message vaiant="danger">{errorProductCreate}</Message>
+      )}
       {loading ? (
         <Loader />
       ) : error ? (
