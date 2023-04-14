@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message.component";
 import Loader from "../components/Loader.component";
 import FormContainer from "../components/FormContainer.component";
-import { listProductDetails } from "../actions/productActions";
-import { USER_UPDATE_BY_ADMIN_RESET } from "../constants/userConstants";
+import { listProductDetails, updateProduct } from "../actions/productActions";
+import { PRODUCT_UPDATE_RESET } from "../constants/productConstants";
 
 const ProductEditScreen = () => {
   const { id } = useParams();
@@ -25,24 +25,45 @@ const ProductEditScreen = () => {
   const productDetails = useSelector((state) => state.productDetails);
   const { loading, error, product } = productDetails;
 
+  const productUpdate = useSelector((state) => state.productUpdate);
+  const {
+    loading: loadingProductUpdate,
+    error: errorProductUpdate,
+    success: successProductUpdate,
+  } = productUpdate;
+
   useEffect(() => {
-    if (!product.name || product._id !== id) {
-      dispatch(listProductDetails(id));
+    if (successProductUpdate) {
+      dispatch({ type: PRODUCT_UPDATE_RESET });
+      navigate(`/admin/productlist`);
     } else {
-      setName(product.name);
-      setPrice(product.email);
-      setImage(product.image);
-      setBrand(product.brand);
-      setCategory(product.category);
-      setCountInStock(product.countInStock);
-      setDescription(product.description);
+      if (!product.name || product._id !== id) {
+        dispatch(listProductDetails(id));
+      } else {
+        setName(product.name);
+        setPrice(product.email);
+        setImage(product.image);
+        setBrand(product.brand);
+        setCategory(product.category);
+        setCountInStock(product.countInStock);
+        setDescription(product.description);
+      }
     }
-  }, [dispatch, navigate, id, product]);
+
+  }, [dispatch, navigate, id, product, successProductUpdate]);
 
   const submitHandler = (e) => {
     e.preventDefault();
-
-    console.log('Update Product')
+    dispatch(updateProduct({
+      _id: id,
+      name,
+      price,
+      image,
+      brand,
+      category,
+      description,
+      countInStock
+    }))
   };
 
   return (
@@ -52,8 +73,8 @@ const ProductEditScreen = () => {
       </Link>
       <FormContainer>
         <h1>Edit Product</h1>
-        {/* {loadingUpdate && <Loader />}
-        {errorUpdate && <Message variant="danger">{errorUpdate}</Message>} */}
+        {loadingProductUpdate && <Loader />}
+        {errorProductUpdate && <Message variant="danger">{errorProductUpdate}</Message>}
         {loading ? (
           <Loader />
         ) : error ? (
@@ -81,7 +102,7 @@ const ProductEditScreen = () => {
             </Form.Group>
 
             <Form.Group controlId="image">
-            <Form.Label>Image</Form.Label>
+              <Form.Label>Image</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter Image URL"
@@ -92,7 +113,7 @@ const ProductEditScreen = () => {
             </Form.Group>
 
             <Form.Group controlId="brand">
-            <Form.Label>Brand</Form.Label>
+              <Form.Label>Brand</Form.Label>
               <Form.Control
                 type="text"
                 label="Enter Brand"
@@ -112,7 +133,7 @@ const ProductEditScreen = () => {
             </Form.Group>
 
             <Form.Group controlId="category">
-            <Form.Label>Category</Form.Label>
+              <Form.Label>Category</Form.Label>
               <Form.Control
                 type="text"
                 label="Enter Category"
@@ -121,9 +142,8 @@ const ProductEditScreen = () => {
               ></Form.Control>
             </Form.Group>
 
-            
             <Form.Group controlId="description">
-            <Form.Label>Description</Form.Label>
+              <Form.Label>Description</Form.Label>
               <Form.Control
                 type="text"
                 label="Enter Description"
