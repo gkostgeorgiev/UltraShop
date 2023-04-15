@@ -45,3 +45,9 @@ a {
 .register-button, .login-button, .continue-button {
   margin-top: 1rem;
 }
+
+.labels {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-top: 10px;
+}

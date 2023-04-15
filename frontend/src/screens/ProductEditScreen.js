@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Form, Button, Container } from "react-bootstrap";
@@ -18,6 +19,7 @@ const ProductEditScreen = () => {
   const [category, setCategory] = useState("");
   const [countInStock, setCountInStock] = useState(0);
   const [description, setDescription] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -41,7 +43,7 @@ const ProductEditScreen = () => {
         dispatch(listProductDetails(id));
       } else {
         setName(product.name);
-        setPrice(product.email);
+        setPrice(product.price);
         setImage(product.image);
         setBrand(product.brand);
         setCategory(product.category);
@@ -49,21 +51,45 @@ const ProductEditScreen = () => {
         setDescription(product.description);
       }
     }
-
   }, [dispatch, navigate, id, product, successProductUpdate]);
+
+  const uploadFileHandler = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+    setUploading(true);
+
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+
+      const { data } = await axios.post("/api/upload", formData, config);
+      setImage(data);
+      setUploading(false);
+    } catch (err) {
+      console.log(err.message);
+      console.error(err);
+      setUploading(false);
+    }
+  };
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(updateProduct({
-      _id: id,
-      name,
-      price,
-      image,
-      brand,
-      category,
-      description,
-      countInStock
-    }))
+    dispatch(
+      updateProduct({
+        _id: id,
+        name,
+        price,
+        image,
+        brand,
+        category,
+        description,
+        countInStock,
+      })
+    );
   };
 
   return (
@@ -74,7 +100,9 @@ const ProductEditScreen = () => {
       <FormContainer>
         <h1>Edit Product</h1>
         {loadingProductUpdate && <Loader />}
-        {errorProductUpdate && <Message variant="danger">{errorProductUpdate}</Message>}
+        {errorProductUpdate && (
+          <Message variant="danger">{errorProductUpdate}</Message>
+        )}
         {loading ? (
           <Loader />
         ) : error ? (
@@ -82,7 +110,7 @@ const ProductEditScreen = () => {
         ) : (
           <Form onSubmit={submitHandler}>
             <Form.Group controlId="name">
-              <Form.Label>Name</Form.Label>
+              <Form.Label className="labels">Name</Form.Label>
               <Form.Control
                 type="name"
                 placeholder="Enter Name"
@@ -92,7 +120,7 @@ const ProductEditScreen = () => {
             </Form.Group>
 
             <Form.Group controlId="price">
-              <Form.Label>Price</Form.Label>
+              <Form.Label className="labels">Price</Form.Label>
               <Form.Control
                 type="number"
                 placeholder="Enter Price"
@@ -101,8 +129,10 @@ const ProductEditScreen = () => {
               ></Form.Control>
             </Form.Group>
 
-            <Form.Group controlId="image">
-              <Form.Label>Image</Form.Label>
+            <Form.Group 
+            // controlId="image"
+            >
+              <Form.Label className="labels">Image URL</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="Enter Image URL"
@@ -110,10 +140,18 @@ const ProductEditScreen = () => {
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
               ></Form.Control>
+              <Form.Control
+                type="file"
+                id="image-file"
+                label="Choose File"
+                custom="true"
+                onChange={uploadFileHandler}
+              ></Form.Control>
+              {uploading && <Loader />}
             </Form.Group>
 
             <Form.Group controlId="brand">
-              <Form.Label>Brand</Form.Label>
+              <Form.Label className="labels">Brand</Form.Label>
               <Form.Control
                 type="text"
                 label="Enter Brand"
@@ -123,7 +161,7 @@ const ProductEditScreen = () => {
             </Form.Group>
 
             <Form.Group controlId="countInStock">
-              <Form.Label>Count In Stock</Form.Label>
+              <Form.Label className="labels">Count In Stock</Form.Label>
               <Form.Control
                 type="number"
                 placeholder="Enter Count In Stock"
@@ -133,7 +171,7 @@ const ProductEditScreen = () => {
             </Form.Group>
 
             <Form.Group controlId="category">
-              <Form.Label>Category</Form.Label>
+              <Form.Label className="labels">Category</Form.Label>
               <Form.Control
                 type="text"
                 label="Enter Category"
@@ -143,7 +181,7 @@ const ProductEditScreen = () => {
             </Form.Group>
 
             <Form.Group controlId="description">
-              <Form.Label>Description</Form.Label>
+              <Form.Label className="labels">Description</Form.Label>
               <Form.Control
                 type="text"
                 label="Enter Description"
