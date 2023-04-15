@@ -1,29 +1,57 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { PayPalButtons } from "@paypal/react-paypal-js";
-import { Link, useParams } from "react-router-dom";
-import { Container, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  Container,
+  Row,
+  Col,
+  ListGroup,
+  Image,
+  Card,
+  Button,
+} from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message.component";
 import Loader from "../components/Loader.component";
-import { getOrderDetails, orderDetailsReset, payOrder, resetCreateOrder } from "../actions/orderActions";
-import { ORDER_PAY_RESET } from "../constants/orderConstants";
+import {
+  getOrderDetails,
+  orderDetailsReset,
+  payOrder,
+  resetCreateOrder,
+  deliverOrder,
+} from "../actions/orderActions";
+import {
+  ORDER_PAY_RESET,
+  ORDER_DELIVER_RESET,
+} from "../constants/orderConstants";
 import { resetCartItems } from "../actions/cartActions";
 
 const OrderScreen = () => {
   const [sdkReady, setSdkReady] = useState(false);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { id } = useParams();
   const orderId = id.substring(id.lastIndexOf("/") + 1);
 
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
 
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
   const orderPay = useSelector((state) => state.orderPay);
   const { loading: loadingPay, success: successPay } = orderPay;
 
+  const orderDeliver = useSelector((state) => state.orderDeliver);
+  const { loading: loadingDeliver, success: successDeliver } = orderDeliver;
+
   useEffect(() => {
+    if (!userInfo) {
+      navigate("/login");
+    }
+
     const addPayPalScript = async () => {
       const { data: clientId } = await axios.get("/api/config/paypal");
       const script = document.createElement("script");
@@ -34,8 +62,9 @@ const OrderScreen = () => {
       document.body.appendChild(script);
     };
 
-    if (!order || successPay) {
+    if (!order || successPay || successDeliver) {
       dispatch({ type: ORDER_PAY_RESET });
+      dispatch({ type: ORDER_DELIVER_RESET });
       dispatch(getOrderDetails(orderId));
     } else if (!order.isPaid) {
       if (!window.paypal) {
@@ -44,7 +73,7 @@ const OrderScreen = () => {
         setSdkReady(true);
       }
     }
-  }, [dispatch, orderId, successPay, order]);
+  }, [dispatch, orderId, successPay, successDeliver, order]);
 
   useEffect(() => {
     return () => {
@@ -62,6 +91,10 @@ const OrderScreen = () => {
     console.log(paymentResult);
     dispatch(payOrder(orderId, paymentResult));
     dispatch(resetCartItems());
+  };
+
+  const deliverHandler = () => {
+    dispatch(deliverOrder(order));
   };
 
   return loading ? (
@@ -90,7 +123,12 @@ const OrderScreen = () => {
                 {" "}
                 {order.isDelivered ? (
                   <Message variant="success">
-                    Delivered on: {order.deliveredAt}
+                    Delivered on:{" "}
+                    {order.deliveredAt
+                      .substring(0, 10)
+                      .split("-")
+                      .reverse()
+                      .join(".")}
                   </Message>
                 ) : (
                   <Message variant="danger">Not Delivered</Message>
@@ -208,6 +246,21 @@ const OrderScreen = () => {
                   )}
                 </ListGroup.Item>
               )}
+              {loadingDeliver && <Loader />}
+              {userInfo &&
+                userInfo.isAdmin &&
+                order.isPaid &&
+                !order.isDelivered && (
+                  <ListGroup.Item>
+                    <Button
+                      type="button"
+                      className="btn btn-block"
+                      onClick={deliverHandler}
+                    >
+                      Mark As Delivered
+                    </Button>
+                  </ListGroup.Item>
+                )}
             </ListGroup>
           </Card>
         </Col>
