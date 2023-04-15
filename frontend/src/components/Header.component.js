@@ -5,6 +5,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { logout } from "../actions/userActions";
 import { resetShippingAddres } from "../actions/cartActions";
 import { orderDetailsReset, resetCreateOrder } from "../actions/orderActions";
+import SearchBox from "./SearchBox.component";
 
 const Header = () => {
   const userLogin = useSelector((state) => state.userLogin);
@@ -17,16 +18,17 @@ const Header = () => {
     dispatch(resetShippingAddres());
     dispatch(orderDetailsReset());
     dispatch(resetCreateOrder());
-    navigate('/');
-  }
+    navigate("/");
+  };
 
   return (
     <header>
       <Navbar bg="dark" variant="dark" expand="lg" collapseOnSelect>
         <Container>
-          <LinkContainer to="/" >
-            <Navbar.Brand>UltraShop</Navbar.Brand>
-          </LinkContainer>
+            <LinkContainer to="/">
+              <Navbar.Brand className="mr-12">UltraShop</Navbar.Brand>
+            </LinkContainer>
+            <SearchBox />
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
@@ -51,9 +53,8 @@ const Header = () => {
                   </Nav.Link>
                 </LinkContainer>
               )}
-              {
-                userInfo && userInfo.isAdmin && (
-                  <NavDropdown title='Admin' id="adminMenu">
+              {userInfo && userInfo.isAdmin && (
+                <NavDropdown title="Admin" id="adminMenu">
                   <LinkContainer to="/admin/userlist">
                     <NavDropdown.Item>Users</NavDropdown.Item>
                   </LinkContainer>
@@ -67,8 +68,7 @@ const Header = () => {
                     Logout
                   </NavDropdown.Item>
                 </NavDropdown>
-                )
-              }
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>
