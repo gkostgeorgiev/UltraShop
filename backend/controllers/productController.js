@@ -17,10 +17,12 @@ const getProducts = asyncHandler(async (req, res) => {
       }
     : {};
 
-    const count = await Product.countDocuments({ ...keyword });
-  const products = await Product.find({ ...keyword }).limit(pageSize).skip(pageSize * (page - 1));
+  const count = await Product.countDocuments({ ...keyword });
+  const products = await Product.find({ ...keyword })
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
 
-  res.json({products, page, pages: Math.ceil(count / pageSize)});
+  res.json({ products, page, pages: Math.ceil(count / pageSize) });
 });
 
 // @description  Fetch a single product
@@ -145,6 +147,16 @@ const createProductReview = asyncHandler(async (req, res) => {
   }
 });
 
+// @description  Get top rated products
+// @route        GET /api/products/top
+// @access       Public
+const getTopProducts = asyncHandler(async (req, res) => {
+  // Sort the products in ascending order 
+  const products = await Product.find({}).sort({ rating: -1 }).limit(3);
+
+  res.json(products);
+});
+
 export {
   getProducts,
   getProductById,
@@ -152,4 +164,5 @@ export {
   createProduct,
   updateProduct,
   createProductReview,
+  getTopProducts
 };
