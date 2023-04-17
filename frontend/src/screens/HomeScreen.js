@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Container } from "react-bootstrap";
 import Product from "../components/Product.component";
 import Message from "../components/Message.component";
 import Loader from "../components/Loader.component";
 import Paginate from "../components/Paginate.component";
+import Meta from "../components/Meta.component";
 import { listProducts } from "../actions/productActions";
 import { useParams } from "react-router-dom";
 import ProductCarousel from "../components/ProductCarousel.component";
@@ -24,8 +26,9 @@ const HomeScreen = () => {
 
   return (
     <Container>
+      <Meta />
       {/* Carousel should not be displayed on active searches */}
-      {!keyword && <ProductCarousel />}
+      {!keyword ? <ProductCarousel /> : <Link to='/' className="btn btn-light continue-button">Go Back</Link>}
       <h1>Latest Products</h1>
       {loading ? (
         <Loader />

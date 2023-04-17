@@ -19,6 +19,7 @@ import {
 import Rating from "../components/Rating.component";
 import Loader from "../components/Loader.component";
 import Message from "../components/Message.component";
+import Meta from "../components/Meta.component";
 import { addToCart } from "../actions/cartActions";
 import { PRODUCT_CREATE_REVIEW_RESET } from "../constants/productConstants";
 
@@ -78,6 +79,7 @@ const ProductScreen = () => {
         <Message variant="danger">{error}</Message>
       ) : (
         <>
+        <Meta title={product.name} />
           <Row>
             <Col md={6}>
               <Image src={product.image} alt={product.name} fluid />

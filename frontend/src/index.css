@@ -53,6 +53,10 @@ a {
 }
 
 /* Carousel */
+.carousel {
+  margin-top: 10px;
+}
+
 .carousel-item-next,
 .carousel-item-prev,
 .carousel-item.active {
