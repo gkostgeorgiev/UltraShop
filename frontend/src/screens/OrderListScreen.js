@@ -13,7 +13,6 @@ const OrderListScreen = () => {
 
   const allOrderList = useSelector((state) => state.allOrderList);
   const { loading, error, orders } = allOrderList;
-  console.log(orders);
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;

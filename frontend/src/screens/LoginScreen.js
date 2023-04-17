@@ -16,7 +16,7 @@ const LoginScreen = () => {
 
   const userLogin = useSelector((state) => state.userLogin);
   const { loading, error, userInfo } = userLogin;
-  //   console.log(loading, error, userInfo);
+
 
   useEffect(() => {
     if (userInfo) {

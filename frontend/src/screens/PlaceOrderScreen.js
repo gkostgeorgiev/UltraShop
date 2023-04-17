@@ -51,7 +51,6 @@ const PlaceOrderScreen = () => {
 
   const orderCreate = useSelector((state) => state.orderCreate);
   const { order, success, error } = orderCreate;
-  console.log(order, success, error);
 
   useEffect(() => {
     if (success) {
