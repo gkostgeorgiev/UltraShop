@@ -16,7 +16,7 @@ const SearchBox = () => {
   };
 
   return (
-    <Form onSubmit={submitHandler} inline className="d-flex align-items-center">
+    <Form onSubmit={submitHandler} inline="true" className="d-flex align-items-center">
       <Row>
         <Col className="col-lg-8 col-md-7 col-12 ml-auto">
           <Form.Control

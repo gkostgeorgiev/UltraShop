@@ -73,7 +73,7 @@ const OrderScreen = () => {
         setSdkReady(true);
       }
     }
-  }, [dispatch, orderId, successPay, successDeliver, order]);
+  }, [dispatch, navigate, orderId, successPay, successDeliver, order, userInfo]);
 
   useEffect(() => {
     return () => {

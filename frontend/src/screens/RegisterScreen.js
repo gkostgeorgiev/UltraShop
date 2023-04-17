@@ -21,7 +21,6 @@ const RegisterScreen = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { loading, error } = userRegister;
   const { userInfo } = userLogin;
-  //   console.log(loading, error, userInfo);
 
   useEffect(() => {
     if (userInfo) {
