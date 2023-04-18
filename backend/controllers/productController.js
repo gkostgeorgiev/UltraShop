@@ -147,11 +147,99 @@ const createProductReview = asyncHandler(async (req, res) => {
   }
 });
 
+// @description  Edit a product review
+// @route        PUT /api/products/:id/reviews
+// @access       Private && USER
+const editProductReview = asyncHandler(async (req, res) => {
+  const { rating, comment } = req.body;
+
+  const product = await Product.findById(req.params.id);
+
+  if (product) {
+    const alreadyReviewed = product.reviews.find(
+      (r) => r.user.toString() === req.user._id.toString()
+    );
+
+    if (!alreadyReviewed) {
+      res.status(400);
+      throw new Error("Product hasn't been reviewed yet");
+    }
+
+    if (isNaN(rating) || rating < 0 || rating > 5) {
+      res.status(400);
+      throw new Error("Invalid rating value");
+    }
+
+    const userReviewIndex = product.reviews.findIndex(
+      (x) => x.user.toString() === req.user._id.toString()
+    );
+
+    const review = {
+      name: req.user.name,
+      rating: Number(rating),
+      comment,
+      user: req.user._id,
+    };
+
+    product.reviews[userReviewIndex] = review;
+
+    product.numReviews = product.reviews.length;
+
+    product.rating =
+      product.reviews.reduce((acc, currItem) => {
+        return currItem.rating + acc;
+      }, 0) / product.reviews.length;
+
+    await product.save();
+    res.status(201).json({ message: "Review edited" });
+  } else {
+    res.status(404);
+    throw new Error("Product not found");
+  }
+});
+
+// @description  Delete a product review
+// @route        DELETE /api/products/:id/reviews
+// @access       Private && USER
+const deleteProductReview = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.id);
+
+  if (product) {
+    const alreadyReviewed = product.reviews.find(
+      (r) => r.user.toString() === req.user._id.toString()
+    );
+
+    if (!alreadyReviewed) {
+      res.status(400);
+      throw new Error("Product hasn't been reviewed yet");
+    }
+
+    const userReviewIndex = product.reviews.findIndex(
+      (x) => x.user.toString() === req.user._id.toString()
+    );
+
+    product.reviews.splice(userReviewIndex, 1);
+
+    product.numReviews = product.reviews.length;
+
+    product.rating =
+      product.reviews.reduce((acc, currItem) => {
+        return currItem.rating + acc;
+      }, 0) / product.reviews.length;
+
+    await product.save();
+    res.status(201).json({ message: "Review deleted" });
+  } else {
+    res.status(404);
+    throw new Error("Product not found");
+  }
+});
+
 // @description  Get top rated products
 // @route        GET /api/products/top
 // @access       Public
 const getTopProducts = asyncHandler(async (req, res) => {
-  // Sort the products in ascending order 
+  // Sort the products in ascending order
   const products = await Product.find({}).sort({ rating: -1 }).limit(3);
 
   res.json(products);
@@ -164,5 +252,7 @@ export {
   createProduct,
   updateProduct,
   createProductReview,
-  getTopProducts
+  getTopProducts,
+  editProductReview,
+  deleteProductReview
 };

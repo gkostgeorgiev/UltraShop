@@ -15,13 +15,18 @@ import {
 import {
   listProductDetails,
   createProductreview,
+  editProductReview,
+  deleteProductReview,
 } from "../actions/productActions";
 import Rating from "../components/Rating.component";
 import Loader from "../components/Loader.component";
 import Message from "../components/Message.component";
 import Meta from "../components/Meta.component";
 import { addToCart } from "../actions/cartActions";
-import { PRODUCT_CREATE_REVIEW_RESET } from "../constants/productConstants";
+import {
+  PRODUCT_CREATE_REVIEW_RESET,
+  PRODUCT_EDIT_REVIEW_RESET,
+} from "../constants/productConstants";
 
 const ProductScreen = () => {
   const [qty, setQty] = useState(1);
@@ -41,6 +46,14 @@ const ProductScreen = () => {
   const { success: successProductReview, error: errorProductReview } =
     productReviewCreate;
 
+  const productReviewUpdate = useSelector((state) => state.productReviewUpdate);
+  const { success: successProductReviewUpdate, error: errorProductReviewUpdate } =
+    productReviewUpdate;
+
+  const productReviewDelete = useSelector((state) => state.productReviewDelete);
+  const { success: successProductReviewDelete, error: errorProductReviewDelete } =
+    productReviewDelete;
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -48,10 +61,17 @@ const ProductScreen = () => {
       alert("Review Submitted!");
       setRating(0);
       setComment("");
-      dispatch({ type: PRODUCT_CREATE_REVIEW_RESET });
+      dispatch({ type: PRODUCT_CREATE_REVIEW_RESET })
+    } else if (successProductReviewUpdate){
+      alert("Review Edited!");
+      setRating(0);
+      setComment("");
+      dispatch({ type: PRODUCT_EDIT_REVIEW_RESET })
     }
+
+
     dispatch(listProductDetails(id));
-  }, [dispatch, id, successProductReview]);
+  }, [dispatch, id, successProductReview, successProductReviewUpdate, successProductReviewDelete]);
 
   const addToCartHandler = () => {
     addToCart(id, qty);
@@ -68,6 +88,22 @@ const ProductScreen = () => {
     );
   };
 
+  const editHandler = (e) => {
+    e.preventDefault();
+
+    dispatch(
+      editProductReview(id, {
+        rating,
+        comment,
+      })
+    );
+  };
+
+  const deleteHandler = (e) => {
+    e.preventDefault();
+    dispatch(deleteProductReview(id));
+  }
+
   return (
     <Container>
       <Link className="btn btn-light my-3" to="/">
@@ -79,7 +115,7 @@ const ProductScreen = () => {
         <Message variant="danger">{error}</Message>
       ) : (
         <>
-        <Meta title={product.name} />
+          <Meta title={product.name} />
           <Row>
             <Col md={6}>
               <Image src={product.image} alt={product.name} fluid />
@@ -193,7 +229,51 @@ const ProductScreen = () => {
                       (review) =>
                         review.user.toString() === userInfo._id.toString()
                     ) ? (
-                    <Message variant='success'>Product successfully reviewed!</Message>
+                    <>
+                      <Message variant="success">
+                        Product successfully reviewed! Would you like to edit or
+                        delete your review? <Button variant='danger' onClick={deleteHandler}>Delete</Button>
+                      </Message>
+                      {errorProductReviewUpdate && (
+                    <Message variant="danger">{errorProductReviewUpdate}</Message>
+                  )}
+                      {errorProductReviewDelete && (
+                    <Message variant="danger">{errorProductReviewDelete}</Message>
+                  )}
+                      <Form onSubmit={editHandler}>
+                        <Form.Group controlId="rating">
+                          <Form.Label>Rating</Form.Label>
+                          <Form.Control
+                            as="select"
+                            value={rating}
+                            onChange={(e) => setRating(e.target.value)}
+                          >
+                            <option value="">Select...</option>
+                            <option value="1">1 - Poor</option>
+                            <option value="2">2 - Fair</option>
+                            <option value="3">3 - Good</option>
+                            <option value="4">4 - Very Good</option>
+                            <option value="5">5 - Excellent</option>
+                          </Form.Control>
+                        </Form.Group>
+                        <Form.Group controlId="comment">
+                          <Form.Label>Comment</Form.Label>
+                          <Form.Control
+                            as="textarea"
+                            row="3"
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}
+                          ></Form.Control>
+                        </Form.Group>
+                        <Button
+                          type="submit"
+                          variant="primary"
+                          className="continue-button"
+                        >
+                          Submit
+                        </Button>
+                      </Form>
+                    </>
                   ) : (
                     <Form onSubmit={submitHandler}>
                       <Form.Group controlId="rating">
@@ -220,7 +300,11 @@ const ProductScreen = () => {
                           onChange={(e) => setComment(e.target.value)}
                         ></Form.Control>
                       </Form.Group>
-                      <Button type="submit" variant="primary">
+                      <Button
+                        type="submit"
+                        variant="primary"
+                        className="continue-button"
+                      >
                         Submit
                       </Button>
                     </Form>
