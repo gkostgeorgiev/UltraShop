@@ -25,6 +25,7 @@ import Meta from "../components/Meta.component";
 import { addToCart } from "../actions/cartActions";
 import {
   PRODUCT_CREATE_REVIEW_RESET,
+  PRODUCT_DELETE_REVIEW_RESET,
   PRODUCT_EDIT_REVIEW_RESET,
 } from "../constants/productConstants";
 
@@ -67,8 +68,12 @@ const ProductScreen = () => {
       setRating(0);
       setComment("");
       dispatch({ type: PRODUCT_EDIT_REVIEW_RESET })
+    } else if (successProductReviewDelete){
+      alert("Review Deleted!");
+      setRating(0);
+      setComment("");
+      dispatch({ type: PRODUCT_DELETE_REVIEW_RESET});
     }
-
 
     dispatch(listProductDetails(id));
   }, [dispatch, id, successProductReview, successProductReviewUpdate, successProductReviewDelete]);
@@ -200,7 +205,7 @@ const ProductScreen = () => {
           <Row>
             <Col md={6}>
               <h2>Reviews</h2>
-              {product.reviews.length === 0 && <Message>No Reviews</Message>}
+              {product.reviews.length === 0 && <Message>No Recent Reviews</Message>}
               <ListGroup variant="flush">
                 {product.reviews.map((review) => (
                   <ListGroup.Item key={review._id}>
