@@ -70,16 +70,16 @@ export const login = (email, password) => async (dispatch) => {
 export const logout = () => (dispatch) => {
   // Remove user information from localStorage
   localStorage.removeItem("userInfo");
-  localStorage.removeItem("__paypal_storage__");
-  localStorage.removeItem("cartItems");
-  localStorage.removeItem("paymentMethod");
-  localStorage.removeItem("shippingAddress");
+  // localStorage.removeItem("__paypal_storage__");
+  // localStorage.removeItem("cartItems");
+  // localStorage.removeItem("paymentMethod");
+  // localStorage.removeItem("shippingAddress");
 
   // Dispatch USER_LOGOUT action to reset the user state
   dispatch({ type: USER_LOGOUT });
   dispatch({ type: USER_DETAILS_RESET });
-  dispatch({ type: ORDER_MY_LIST_RESET });
-  dispatch({ type: USER_LIST_RESET });
+  // dispatch({ type: ORDER_MY_LIST_RESET });
+  // dispatch({ type: USER_LIST_RESET });
 };
 
 export const register = (name, email, password) => async (dispatch) => {

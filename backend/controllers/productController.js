@@ -5,6 +5,7 @@ import Product from "../models/productModel.js";
 // @route        GET /api/products
 // @access       Public
 const getProducts = asyncHandler(async (req, res) => {
+  // reduce page size to demonstrate pagination functionality
   const pageSize = 10;
   const page = req.query.pageNumber || 1;
 

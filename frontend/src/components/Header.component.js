@@ -3,8 +3,8 @@ import { LinkContainer } from "react-router-bootstrap";
 import { Navbar, Nav, Container, NavDropdown } from "react-bootstrap";
 import { Outlet, useNavigate } from "react-router-dom";
 import { logout } from "../actions/userActions";
-import { resetShippingAddres } from "../actions/cartActions";
-import { orderDetailsReset, resetCreateOrder } from "../actions/orderActions";
+// import { resetShippingAddres } from "../actions/cartActions";
+// import { orderDetailsReset, resetCreateOrder } from "../actions/orderActions";
 import SearchBox from "./SearchBox.component";
 
 const Header = () => {
@@ -15,9 +15,9 @@ const Header = () => {
 
   const logoutHandler = () => {
     dispatch(logout());
-    dispatch(resetShippingAddres());
-    dispatch(orderDetailsReset());
-    dispatch(resetCreateOrder());
+    // dispatch(resetShippingAddres());
+    // dispatch(orderDetailsReset());
+    // dispatch(resetCreateOrder());
     navigate("/");
   };
 

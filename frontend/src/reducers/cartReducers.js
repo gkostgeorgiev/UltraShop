@@ -52,7 +52,7 @@ export const cartReducer = (
 
     case CART_RESET_SHIPPING_ADDRESS:
       return {
-        cartItems: [],
+        ...state,
         shippingAddress: {},
       };
 
