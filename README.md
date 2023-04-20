@@ -3,7 +3,7 @@ A React Project
 
 ## General Information
 
-UltraShop is an eCommerce online store project developed for the React SoftUni course (Feb 2023 – April 2023). The application is suitable for small businesses that aim to sell their goods online and features an easy-to-use interface for managing products, orders, and customers.  It has been built with the MERN stack (MongoDB, Express.js, React and Node.js) and uses React Redux as a state management solution. The app has been deployed via Heroku and can be accessed through the following [URL](https://ultrashop-reactapp.herokuapp.com).  
+UltraShop is an eCommerce online store project developed for the React SoftUni course (Feb 2023 – April 2023). The application is suitable for small businesses that aim to sell their goods online and features an easy-to-use interface for managing products, orders, and customers.  It has been built with the MERN stack (MongoDB, Express.js, React and Node.js) and uses React Redux as a state management solution. The app has been deployed and can be accessed through the following [URL](https://ultrashop.onrender.com).  
 
 ![image](https://i.ibb.co/TY1fXrJ/Ultra-Shop-screenshot.jpg)
  
