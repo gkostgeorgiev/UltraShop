@@ -36,7 +36,7 @@ export const listProducts =
       dispatch({ type: PRODUCT_LIST_REQUEST });
 
       const { data } = await axios.get(
-        `https://ultrashop-reactapp-api.onrender.com/api/products?keyword=${keyword.toString()}&pageNumber=${pageNumber}`
+        `/api/products?keyword=${keyword.toString()}&pageNumber=${pageNumber}`
       );
 
       dispatch({
