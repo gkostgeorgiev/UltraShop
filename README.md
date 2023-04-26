@@ -1,5 +1,5 @@
 # UltraShop
-A React Project
+eCommerce app
 
 ## General Information
 
